@@ -1,0 +1,49 @@
+# ============================================================
+# HW4 - commit ONLY the submission-checklist files
+# (plus requirements.txt and run_all.bat, which "How to run" needs)
+# Everything else is ignored: raw data, .venv, __pycache__,
+# supporting reports, Power BI files, scratch folders.
+# ============================================================
+
+# 1) ignore everything at the top level ...
+/*
+
+# 2) ... then let these back in
+!/.gitignore
+!/README.md
+!/decision_log.md
+!/requirements.txt
+!/run_all.bat
+
+# scripts/ - only the three scripts
+!/scripts/
+/scripts/*
+!/scripts/01_profile.py
+!/scripts/02_clean.py
+!/scripts/03_validate.py
+
+# data/clean/ - the 8 clean tables + README_clean.md
+!/data/
+/data/*
+!/data/clean/
+/data/clean/*
+!/data/clean/*.csv
+!/data/clean/README_clean.md
+
+# data/audit/ - cleaning log, value changes, quarantine files
+!/data/audit/
+/data/audit/*
+!/data/audit/cleaning_log.csv
+!/data/audit/value_changes.csv
+!/data/audit/quarantine_*.csv
+
+# reports/ - the four checklist reports
+!/reports/
+/reports/*
+!/reports/profile_raw.csv
+!/reports/dq_summary_raw.csv
+!/reports/data_quality_scorecard.csv
+!/reports/cleaning_report.md
+# Part D evidence a grader needs to see (IQR flags summary, reconciliations)
+!/reports/iqr_outlier_summary.csv
+!/reports/reconciliations.csv

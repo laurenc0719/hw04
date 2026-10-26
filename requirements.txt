@@ -1,0 +1,4 @@
+# HW4 - Wildcat Capital data cleaning
+# Install with: pip install -r requirements.txt
+pandas>=1.5
+numpy>=1.23
