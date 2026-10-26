@@ -1,0 +1,27 @@
+step,table,issue,action,rows_affected,note
+1,fact_transactions,security_id stored as decimal text ('45.0'),convert to integer text,197175,text join match 0.00% -> 100.00%
+2,fact_portfolio_snapshot,return_ytd stored as percent strings ('-0.64%'),convert: recompute as benchmark_return_ytd + active_alpha_ytd,300,"verified against the percent string (max gap 0.000050, within its 2-decimal rounding); full 6-decimal precision kept"
+3,dim_client,state written as full name,standardize to USPS code,78,Pennsylvania -> PA (25); Florida -> FL (15); New York -> NY (14); New Jersey -> NJ (13); California -> CA (5); Illinois -> IL (4); Texas -> TX (2)
+4,dim_advisor,certifications = literal text 'None',standardize to 'No Certification',6,"means 'no certification' (a real answer), not missing data"
+5,dim_client,duplicate clients (same in all columns except a truncated/altered last_name),quarantine,25,verified: 0 fact rows reference them; original kept for each
+6,fact_transactions,client_id not in dim_client (orphans),quarantine,200,"200 distinct ids; amount $10,888,495.37; types {'Buy': 58, 'Dividend': 38, 'Sell': 35, 'Deposit': 25, 'Advisory Fee': 24, 'Withdrawal': 20}"
+7,fact_transactions,Buy rows with negative shares,convert to absolute value,835,verified: abs(shares) x price = amount (+-$0.01) for every changed row; afterwards the identity holds for all security rows
+8,dim_client,risk_profile blank,fill from benchmark (only where benchmark maps to one profile) + risk_profile_imputed_flag,75,benchmark->profile used: {'3': 'Balanced'}; 0 blanks left (no unambiguous source)
+9,fact_portfolio_snapshot,"aum exactly $1,000 (floor/placeholder)",flag aum_floor_flag,420,92 clients
+10,fact_fees,"aum_basis exactly $1,000 (same floor)",flag aum_floor_flag,386,"verified: every flagged fee matches a flagged snapshot (client, month)"
+11,fact_portfolio_snapshot,return_ytd outside -100%..+100% YTD,flag return_outlier_flag,977,144 clients; max 94.67
+12,fact_portfolio_snapshot,active_alpha_ytd outside -100%..+100% YTD,flag alpha_outlier_flag,1176,305 of these have a return inside +-100% (not caught by return_outlier_flag)
+13,fact_transactions,Buy/Sell dated on a non-trading day,flag non_trading_day_flag,40630,28.4% of trades; true trade date not recoverable
+14,fact_transactions,inactive client transacting after last snapshot month,flag txn_after_close_flag,2410,close date or transactions wrong - cannot tell which
+15,fact_transactions,"Advisory Fee debits do not reconcile to fact_fees (client-year, +-10%)",leave as is (documented),9350,"fact_fees is the system of record: it reconciles 100% to aum_basis x bps / 10,000 / 12 and to snapshot AUM"
+16,fact_transactions,Dividend amount = shares x price (full position value),leave as is (documented),53826,consistent source definition; true dividend not recoverable - do not sum as income
+17,dim_date,fixed-date market holidays flagged as trading days,leave as is (documented),9,calendar has no holiday logic; partial fix would be misleading
+18,dim_security,sector blank for ETFs,leave as is (documented),219,legitimate structure
+19,dim_security,expense_ratio_bps blank for stocks,leave as is (documented),281,legitimate structure - do not fill with 0
+20,fact_transactions,security_id/shares/price blank on cash flows,leave as is (documented),101528,legitimate structure (nullable FK)
+21,fact_portfolio_snapshot,snapshot dated the 1st of the onboarding month,leave as is (documented),930,month grain - legitimate
+22,fact_portfolio_snapshot,snapshot month with no fee row,leave as is (documented),7350,possible waivers/billing gaps; nothing to fill from
+23,dim_client,same-name clients (e.g. Deborah Miller 1626 / 2060),leave as is (documented),2,"different city, ZIP, advisor and history - different people, not merged"
+24,dim_client,zip_code with leading zeros,leave as is (documented),228,keep as text
+25,fact_portfolio_snapshot,active_alpha_ytd in scientific notation,leave as is (documented),756,parses correctly - formatting only
+26,dim_benchmark,benchmark never referenced,leave as is (documented),1,"benchmark_id 6 - reference data, keep"
