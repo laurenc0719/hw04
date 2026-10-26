@@ -1,0 +1,17 @@
+table,stage,rows,pct_completeness,pct_key_uniqueness,pct_type_validity,pct_rule_pass,pct_referential_match,rules_evaluated,fk_relationships
+dim_advisor,raw,25,100.0,100.0,100.0,94.0,,4,0
+dim_advisor,clean,25,100.0,100.0,100.0,100.0,,4,0
+dim_benchmark,raw,8,100.0,100.0,100.0,100.0,,2,0
+dim_benchmark,clean,8,100.0,100.0,100.0,100.0,,2,0
+dim_client,raw,2525,99.785,99.0099,100.0,99.6124,100.0,8,1
+dim_client,clean,2500,100.0,100.0,100.0,100.0,100.0,9,1
+dim_date,raw,1827,100.0,100.0,100.0,100.0,,6,0
+dim_date,clean,1827,100.0,100.0,100.0,100.0,,6,0
+dim_security,raw,500,100.0,100.0,100.0,100.0,100.0,6,1
+dim_security,clean,500,100.0,100.0,100.0,100.0,100.0,6,1
+fact_fees,raw,122197,100.0,100.0,100.0,100.0,100.0,4,3
+fact_fees,clean,122197,100.0,100.0,100.0,100.0,100.0,5,3
+fact_portfolio_snapshot,raw,129547,100.0,100.0,99.9807,99.7923,100.0,8,4
+fact_portfolio_snapshot,clean,129547,100.0,100.0,100.0,99.8489,100.0,11,4
+fact_transactions,raw,298772,100.0,100.0,90.5449,99.9324,81.95,5,4
+fact_transactions,clean,298572,100.0,100.0,100.0,100.0,100.0,7,4

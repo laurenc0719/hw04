@@ -1,0 +1,19 @@
+stage,reconciliation,scope,rows_compared,rows_not_comparable,mismatches,match_pct,max_abs_diff,note
+raw,"fact_fees.amount = aum_basis x bps_charged / 10,000 / 12",within table (recomputed vs stored),122197,0,0,100.0,0.005,tolerance 0.011
+raw,fact_transactions.amount = shares x price (Buy/Sell/Dividend),within table (recomputed vs stored),197175,0,836,99.576,479263.017646,tolerance 0.011
+raw,active_alpha_ytd = return_ytd - benchmark_return_ytd,within table (recomputed vs stored),129247,300,0,100.0,1e-06,tolerance 2e-06; rows with unparseable values are not comparable
+raw,fact_fees.aum_basis = fact_portfolio_snapshot.aum (same client & month),cross-table,122197,0,0,100.0,0.0,not comparable = fee with no snapshot for that client-month
+raw,fact_fees.advisor_id = dim_client.advisor_id,cross-table,122197,0,0,100.0,,not comparable = client_id not found in dim_client
+raw,fact_portfolio_snapshot.advisor_id = dim_client.advisor_id,cross-table,129547,0,0,100.0,,not comparable = client_id not found in dim_client
+raw,fact_transactions.advisor_id = dim_client.advisor_id,cross-table,298572,200,0,100.0,,not comparable = client_id not found in dim_client
+raw,fact_portfolio_snapshot.account_type = dim_client.primary_account_type,cross-table,129547,0,0,100.0,,
+raw,"Advisory Fee debits (fact_transactions) = fact_fees total, per client-year",cross-table,10396,948,9350,10.0616,776455.48,tolerance 10%; known limitation - fact_fees is the system of record
+clean,"fact_fees.amount = aum_basis x bps_charged / 10,000 / 12",within table (recomputed vs stored),122197,0,0,100.0,0.005,tolerance 0.011
+clean,fact_transactions.amount = shares x price (Buy/Sell/Dividend),within table (recomputed vs stored),197044,0,0,100.0,0.005,tolerance 0.011
+clean,active_alpha_ytd = return_ytd - benchmark_return_ytd,within table (recomputed vs stored),129547,0,0,100.0,1e-06,tolerance 2e-06; rows with unparseable values are not comparable
+clean,fact_fees.aum_basis = fact_portfolio_snapshot.aum (same client & month),cross-table,122197,0,0,100.0,0.0,not comparable = fee with no snapshot for that client-month
+clean,fact_fees.advisor_id = dim_client.advisor_id,cross-table,122197,0,0,100.0,,not comparable = client_id not found in dim_client
+clean,fact_portfolio_snapshot.advisor_id = dim_client.advisor_id,cross-table,129547,0,0,100.0,,not comparable = client_id not found in dim_client
+clean,fact_transactions.advisor_id = dim_client.advisor_id,cross-table,298572,0,0,100.0,,not comparable = client_id not found in dim_client
+clean,fact_portfolio_snapshot.account_type = dim_client.primary_account_type,cross-table,129547,0,0,100.0,,
+clean,"Advisory Fee debits (fact_transactions) = fact_fees total, per client-year",cross-table,10396,924,9350,10.0616,776455.48,tolerance 10%; known limitation - fact_fees is the system of record
